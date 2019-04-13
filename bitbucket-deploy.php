@@ -13,11 +13,28 @@ $sp_app_name = 'example';
 /* Branch you want to deploy from */
 $branch_to_deploy = 'master';
 
+/* Deploy to public directory only? (by default we deploy to the app directory) */
+$deploy_to_public = false;
+
+/* Run composer after deploy to update packages? */
+$run_composer = true;
+
+/* Run custom commands after deploy? */
+$run_custom_commands = false;
+
+/* Add your custom shell commands to run here and change run_custom_commands to true */
+$custom_commands = '';
+
 /* By default we deploy to the app directory which is great for applications like Laravel */
 $app_root_dir = '/srv/users/' . $sp_user_name . '/apps/' . $sp_app_name;
 
-/* If you want to deploy directly to the public directory just uncomment the line below */
-//$app_root_dir .= '/public';
+/* Should we deploy to the public directory only? */
+if ($deploy_to_public) {
+
+  /* Add the public directory to the deployment path */
+  $app_root_dir .= '/public';
+
+}
 
 /* The hidden directory that holds a copy of your repository where we actually deploy from */
 $hidden_repo_dir = $app_root_dir . '/.repo';
@@ -72,12 +89,26 @@ if ($update) {
   exec('cd ' . $hidden_repo_dir . ' && ' . $git_bin_path  . ' fetch');
   exec('cd ' . $hidden_repo_dir . ' && GIT_WORK_TREE=' . $app_root_dir . ' ' . $git_bin_path  . ' checkout -f ' . $branch_to_deploy);
 
-  /* Run composer update */
-  shell_exec('composer update -d ' . $app_root_dir);
+  /* Should we run composer? */
+  if ($run_composer) {
+
+      /* Run composer update */
+      shell_exec($composer_bin_path . ' update -d ' . $app_root_dir);
+
+  }
+
+  /* Should we run custom commands? */
+  if ($run_custom_commands) {
+
+    /* Run custom commands on shell */
+    shell_exec($custom_commands);
+
+  }
 
   /* Retrieve the commit hash */
   $commit_hash = shell_exec('cd ' . $hidden_repo_dir . ' && ' . $git_bin_path  . ' rev-parse --short ' . $branch_to_deploy);
 
   /* Log the result of the commit */
   file_put_contents($hidden_repo_dir . '/deploy.log', date('Y-m-d h:i:s a') . " Deployed Branch: " .  $branch . " Commit: " . $commit_hash, FILE_APPEND);
+
 }
