@@ -16,7 +16,7 @@ $branch_to_deploy = 'master';
 /* Deploy to public directory only? (by default we deploy to the app directory) */
 $deploy_to_public = false;
 
-/* Run composer after deploy to update packages? */
+/* Run composer install after deploy to update packages? */
 $run_composer = true;
 
 /* Run custom commands after deploy? */
@@ -89,11 +89,11 @@ if ($update) {
   exec('cd ' . $hidden_repo_dir . ' && ' . $git_bin_path  . ' fetch');
   exec('cd ' . $hidden_repo_dir . ' && GIT_WORK_TREE=' . $app_root_dir . ' ' . $git_bin_path  . ' checkout -f ' . $branch_to_deploy);
 
-  /* Should we run composer? */
+  /* Should we run composer install? */
   if ($run_composer) {
 
-      /* Run composer update */
-      shell_exec($composer_bin_path . ' update -d ' . $app_root_dir);
+      /* Run composer install */
+      shell_exec($composer_bin_path . ' install -d ' . $app_root_dir);
 
   }
 

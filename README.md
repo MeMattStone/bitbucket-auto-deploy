@@ -25,28 +25,38 @@ This script has been fully tested with ServerPilot using the following versions 
 
 By default this script will deploy to your app root directory (e.g. /srv/users/<sp_username>/apps/<sp_appname>), this is ideal for applications such as Laravel where the application files sit above the public folder that the web server has set as its document root. There is an option in the script to deploy directly to the public folder or you could even change this to a deeper path such as a WordPress theme directory (e.g. /srv/users/<sp_username>/apps/<sp_appname>/public/wp-content/themes).
 
-1. From a terminal window ssh into your ServerPilot server and cd to your app directory:
+1. If you haven't already generated an SSH key on your server run the following command accepting the default path and just hit enter on the passphrase option as we do not want to set a passphrase (if you've already setup SSH keys skip to step 3):
+```
+ssh-keygen
+```
+
+2. Output the contents of your newly created SSH file and copy this to BitBucket by creating a new access key in repository Settings > General > Access keys > Add key:
+```
+cat .ssh/id_rsa.pub
+```
+
+3. From a terminal window ssh into your ServerPilot server and cd to your app directory:
 ```
 cd apps/APPNAME
 ```
 
-2. Next you need to create the hidden repo directory which is where a cached copy of the repository is stored that is where we deploy from:
+4. Next you need to create the hidden repo directory which is where a cached copy of the repository is stored that is where we deploy from:
 ```
 mkdir -p .repo
 ```
 
-3. Run the following command to manually pull a copy of the repository to your hidden repo directory:
+5. Run the following command to manually pull a copy of the repository to your hidden repo directory:
 ```
 git clone --mirror git@bitbucket.org:BITBUCKETUSERNAME/REPOSITORYNAME.git .repo
 ```
 
-4. Do an initial deployment of the repository by running this set of commands (if you are deploying to a public directory you should add /public after APPNAME):
+6. Do an initial deployment of the repository by running this set of commands (if you are deploying to a public directory you should add /public after APPNAME):
 ```
 cd .repo
 GIT_WORK_TREE=/srv/users/SYSUSER/apps/APPNAME git checkout -f master
 ```
 
-5. The only file you need from this project is bitbucket-deploy.php, download it directly from source, rename it to something like bitbucket-deploy-bda84024ca84.php (replace bda84024ca84 with a random string of characters of your own choosing), copy it to your public directory within your app (it needs to be in this location in order for BitBucket webhooks to connect to it regardless of where you actually deploy the repository to) and then using your favourite terminal editor modify the following lines to suit your deployment:
+7. The only file you need from this project is bitbucket-deploy.php, download it directly from source, rename it to something like bitbucket-deploy-bda84024ca84.php (replace bda84024ca84 with a random string of characters of your own choosing), copy it to your public directory within your app (it needs to be in this location in order for BitBucket webhooks to connect to it regardless of where you actually deploy the repository to) and then using your favourite terminal editor modify the following lines to suit your deployment:
 
 ```
 /* ServerPilot app details */
@@ -68,6 +78,8 @@ $run_custom_commands = false;
 /* Add your custom shell commands to run here and change run_custom_commands to true */
 $custom_commands = '';
 ```
+
+8. Add a publicly accessible link to your php file to your repository Webhooks and set it to trigger on a repository push.
 
 That should be all you need to edit but on custom setups you might need to modify some of the paths to suit your needs.
 
