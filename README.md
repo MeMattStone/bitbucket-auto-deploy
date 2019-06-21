@@ -35,7 +35,7 @@ ssh-keygen
 cat .ssh/id_rsa.pub
 ```
 
-3. From a terminal window ssh into your ServerPilot server and cd to your app directory:
+3. From a terminal window ssh into your ServerPilot server and cd to your app directory (you may need to amend the path below to suit your setup, e.g. apps/APPNAME/public if you are deploying to the public directory):
 ```
 cd apps/APPNAME
 ```
