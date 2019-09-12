@@ -1,5 +1,7 @@
 # BitBucket Auto-Deploy for ServerPilot
 
+**Please Note:** _This project has been archived on GitHub and moved to it's new home on BitBucket (kind of makes sense really!) and can be found here: https://bitbucket.org/matt-stone/bitbucket-auto-deploy/_
+
 Deploy your repositories automatically from BitBucket to ServerPilot apps. This script can be easily modified to suit most LAMP environments, not just ServerPilot.
 
 ## Getting Started
